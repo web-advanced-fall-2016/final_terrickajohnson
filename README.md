@@ -6,6 +6,18 @@ Creators are able to use midi controllers and analog sensors to produce sound an
 
 While visual artists control color (mood), musicians control the sound of the web page. Each hit on a midi controllers stores the current color code along with the corresponding keynote from the midi device. This is saved into a database for later access.
 
+Technology for this Project:
+RFduino,
+Raspberry Pi,
+Arduino,
+Socket IO,
+Web Midi JS
+
 Future Iterations:
-Add playback of midi notes and colors
+Add playback of midi notes and colors,
 Think of more interesting ways to display the relationship between sonic and visual.
+
+Future Technologies to be considered:
+Web Sockets,
+Paper JS / D3 JS
+Max MSP
