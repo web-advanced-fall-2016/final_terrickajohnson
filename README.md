@@ -1,6 +1,6 @@
 Sonic Graffiti Demo
 
-![Alt text](screenshot.png?raw=true "Optional Title")
+![Alt text](screenshot-1.png?raw=true "Optional Title")
 
 
 Sonic Graffiti is a collaborative arts repository for a post-modern society. Building on the connection between social activism and hip-hop culture, Sonic Graffiti provides a platform for connecting sonic and visual artists while also serving as an archival tool for said artists.
