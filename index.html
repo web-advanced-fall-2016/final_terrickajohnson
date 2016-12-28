@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!-- saved from url=(0077)http://mrdoob.github.io/three.js/examples/webgl_panorama_equirectangular.html -->
+<html lang="en" style="visibility: visible;"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>three.js webgl - equirectangular panorama demo</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<!-- your server info -->
+		<!-- <script src="//192.168.1.223:8000/socket.io/socket.io.js" type="text/javascript"></script> -->
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="js/three.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="styles.css">
+
+</head>
+
+<body>
+	<script>
+var socket = io.connect("192.168.1.62:8000");
+
+$(document).ready(function(){
+
+	var col1 = 0;
+	var col2 = 0;
+	var col3 = 0;
+	 
+		  socket.on('led', function(data){
+		  		// console.log(data.value)
+
+		  		var incoming = data.value;
+
+		  		var res = /r/;
+		  		var ges = /g/;
+		  		var bes = /b/;
+		  		
+		  		if(res.test(incoming)){
+		  			var first = incoming.substring(1);
+		  			col1 = incoming.substring(1);
+		  			$("#column-1").css('background','rgb('+col1+',112,255)');
+		  		}
+
+
+
+		  		if(ges.test(incoming)){
+		  			var second = incoming.substring(1);
+		  			// console.log(second);
+		  			col2 = incoming.substring(1);
+		  			$("#column-2").css('background','rgb(255,'+col2+',112)');
+		  		}
+
+		  		if(bes.test(incoming)){
+		  			var third = incoming.substring(1);
+		  			console.log(third);
+		  			col3 = incoming.substring(1);
+		  			$("#column-3").css('background','rgb(255, 255,'+col3+')');
+		  		}
+		  		
+
+		  });
+});
+
+
+
+	//   socket.on('news', function (data) {
+	// 	    console.log(data);
+	// 	    socket.emit('my other event', { my: 'data' });
+
+
+	// 	  });
+
+	socket.on('message', function(message) {
+        console.log('The server has a message for you: ' + message);
+    })
+</script>
+
+<div id="container">
+
+	<div id="color-bar">
+
+		<div id="column-1" class="column" style="background:blue">
+		one	
+		</div>
+		<div id="column-2" class="column" style="background:lime">
+		two
+		</div>
+		<div id="column-3" class="column" style="background:red">
+		three
+		</div>
+
+		<div id="color-result" class="column">
+			<div id="final-color">
+
+			</div>
+
+		</div>
+
+	</div>
+
+<!-- 	<div id="sample-div" style="visibility:hidden !important;">
+
+	</div> -->
+
+	<div id="grid">
+		<!-- <div class="block">
+
+
+		</div> -->
+
+
+	</div>
+
+	<script>
+		var pad1 = 48;
+
+		// midi
+
+		if (navigator.requestMIDIAccess) {
+		    navigator.requestMIDIAccess()
+		        .then(success, failure);
+		}
+
+		function success (midi) {
+		    var inputs = midi.inputs.values();
+		    // inputs is an Iterator
+		 
+		    for (var input = inputs.next(); input && !input.done; input = inputs.next()) {
+		        // each time there is a midi message call the onMIDIMessage function
+		        input.value.onmidimessage = onMIDIMessage;
+		    }
+		}
+
+		function failure () {
+		    console.error('No access to your midi devices.')
+		}
+
+		function onMIDIMessage (message) {
+
+			
+			if (message.data[0] === 144 && message.data[2] > 0) {
+				//console.log(message.data[1]);
+
+				var newNote = message.data[1];
+
+
+
+				var finalNote = Math.floor(newNote.map(0, 120, 0, 255));
+					console.log(finalNote);
+
+					var col1Color = $("#column-1").css('backgroundColor');
+
+					var result1 = hexc(col1Color);
+
+					socket.emit('column1color', {result: result1, padkey: newNote})
+
+				function hexc(colorval) {
+				    var parts = colorval.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+				    delete(parts[0]);
+				    for (var i = 1; i <= 3; ++i) {
+				        parts[i] = parseInt(parts[i]).toString(16);
+				        if (parts[i].length == 1) parts[i] = '0' + parts[i];
+				    }
+				    color = '#' + parts.join('');
+				    console.log(color);
+				    return color;
+				}
+
+				var block = document.createElement('div');
+				block.className = 'block';
+				block.css("background",result1);
+				var grid = $("#grid");
+				grid.appendChild(block);
+
+
+				Number.prototype.map = function (in_min, in_max, out_min, out_max) {
+				  return (this - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+				}
+
+					
+			}
+		}
+	</script>
+
+</div>
+
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src='WebMIDIAPI.min.js'></script>
+<script src='keyboard.js'></script>
+<script src="main.js"></script>
+
+</body>
+
+</html>
